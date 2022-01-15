@@ -2,7 +2,7 @@ import os, time, asyncio, re
 from pyrogram import Client, filters
 from bot.helpers.sql_helper import gDriveDB, idsDB
 from bot.helpers.utils import CustomFilters, humanbytes
-from bot.helpers.downloader import download_file2
+from bot.helpers.downloader import download_file2, utube_dl
 from bot.helpers.download_from_url import download_file, get_size
 from bot.helpers.gdrive_utils import GoogleDrive
 from bot.helpers.mega_dl import megadl
@@ -59,8 +59,8 @@ async def _download(client, message):
 
       await sent_message.edit(Messages.DOWNLOADING.format(link))
       
-      result, file_path = await download_file2(str(link), dl_path)
-      if result:
+      result, file_path = await download_file2(link, dl_path)
+      if result == True:
         fn = os.path.basename(file_path)
         sz = humanbytes(os.path.getsize(file_path))
         await sent_message.edit(f"`uploading 1st ...`\n\n{fn} [{sz}]")

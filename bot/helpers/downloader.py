@@ -1,7 +1,9 @@
-import os, functools, logging, asyncio
+import os, wget, glob, functools, logging
 from concurrent.futures import ThreadPoolExecutor
 from pySmartDL import SmartDL
 from urllib.error import HTTPError
+from youtube_dl import DownloadError
+from bot import DOWNLOAD_DIRECTORY
 
 logger = logging.getLogger(__name__)
 
@@ -16,13 +18,21 @@ def run_in_executor(_func):
 
 @run_in_executor
 def download_file2(url, dl_path):
-    
-    dl = SmartDL(url, dl_path, progress_bar=True)
-    logger.info(f'Downloading: {url} in {dl_path}')
-    dl.start()
-    #dl.get_dest()
-    #if os.path.exists(dl_path):
-    if dl.get_dest():
-        return True, dl.get_dest()
+  
+  sw1 = "aaa"
+  dl = SmartDL(url, dl_path, progress_bar=False)
+  logger.info(f'Downloading: {url} in {dl_path}')
+  dl.start()
+  dl.get_dest()
+  if os.path.exists(dl_path):
+    return True, dl_path
+  else:
+    sw1 = "bbb"
+  
+  if sw1 == "bbb":
+    wget.download(url, dl_path)
+    if os.path.exists(dl_path):
+      return True, dl_path
     else:
-        return False, "Erorr"
+      return False, "Erorr"
+

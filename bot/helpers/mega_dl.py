@@ -1,11 +1,26 @@
-import os, shutil, time, asyncio, logging, subprocess, datetime, functools
-from concurrent.futures import ThreadPoolExecutor
+import os
+import shutil
+#import filetype
+#import moviepy.editor
+import time
+import asyncio
+import logging
+import subprocess
+import datetime
 from mega import Mega
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+#from hurry.filesize import size
+#from megadl.progress import progress_for_pyrogram, humanbytes
+#from megadl.forcesub import handle_force_subscribe
+#from config import Config
+#from megadl.file_handler import send_to_transfersh_async, progress
 from bot import DOWNLOAD_DIRECTORY
 
-logger = logging.getLogger(__name__)
+# Logging
+
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 # Mega Client
 mega = Mega()
@@ -20,22 +35,9 @@ MEGA_REGEX = (r"^((?:https?:)?\/\/)"
               r"?((?:mega\.nz))"
               r"(\/)([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([\w\-]+)(\S+)?$")
 
-# https://stackoverflow.com/a/64506715
-def run_in_executor(_func):
-    @functools.wraps(_func)
-    async def wrapped(*args, **kwargs):
-        loop = asyncio.get_event_loop()
-        func = functools.partial(_func, *args, **kwargs)
-        return await loop.run_in_executor(executor=ThreadPoolExecutor(), func=func)
-    return wrapped
-
-@run_in_executor
-def download_mega(url, alreadylol):
-  magapylol = m.download_url(url, alreadylol)
-  return magapylol
 
 
-
+#@Client.on_message(filters.regex(MEGA_REGEX) & filters.private & filters.incoming & ~filters.edited)
 async def megadl(client, message, sent_message):
 
     url = message.text
@@ -46,9 +48,10 @@ async def megadl(client, message, sent_message):
         megadldir = os.makedirs(alreadylol)
     try:
         await sent_message.edit(f"**Downloading:**\n\n`{url}`")
-        magapylol = await download_mega(url, alreadylol)
+        magapylol = m.download_url(url, alreadylol)
         return str(magapylol)
     except Exception as e:
         await sent_message.edit(f"**Error:** `{e}`")
         shutil.rmtree(basedir + "/" + userpath)
-        return "error"
+        magapylol = "error"
+        return magapylol
