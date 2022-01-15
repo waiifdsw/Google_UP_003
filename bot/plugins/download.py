@@ -2,7 +2,7 @@ import os, time, asyncio, re
 from pyrogram import Client, filters
 from bot.helpers.sql_helper import gDriveDB, idsDB
 from bot.helpers.utils import CustomFilters, humanbytes
-from bot.helpers.downloader import download_file2, utube_dl
+from bot.helpers.downloader import download_file2
 from bot.helpers.download_from_url import download_file, get_size
 from bot.helpers.gdrive_utils import GoogleDrive
 from bot.helpers.mega_dl import megadl
